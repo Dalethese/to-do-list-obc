@@ -42,14 +42,25 @@ router.get('/:id', async (req, res) => {
   }
 })
 
-router.put('/:id', async (req, res) => {
-  let { name } = req.body
-  let id = req.params.id
+router.get('/:id/edit', async (req, res) => {
   try {
-    let checklist = await Checklist.findByIdAndUpdate(id, {name}, {new: true})
-    res.status(200).json(checklist)
+    let checklist = await Checklist.findById(req.params.id);
+    res.status(200).render('checklists/edit', { checklist: checklist })
   } catch (error) {
-    res.status(422).json(error.message)
+    res.status(422).render('checklists/new', {...checklist, error })
+  }
+})
+
+router.put('/:id', async (req, res) => {
+  let { name } = req.body.checklist
+  let checklist = await Checklist.findById(req.params.id);
+
+  try {
+    await Checklist.findByIdAndUpdate(req.params.id, {name})
+    res.redirect('/checklists')
+  } catch (error) {
+    let errors = error.errors;
+    res.status(422).render('checklists/edit', {checklist: {...checklist, errors}})
   }
 })
 
