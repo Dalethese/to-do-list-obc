@@ -21,6 +21,7 @@ app.set('view engine', 'ejs');
 app.use("/", rootRouter);
 app.use("/checklists", checkListRouter);
 app.use("/checklists", taskRouter.checklistDependent);
+app.use("/tasks", taskRouter.simpleRouter)
 
 app.listen(3000, () => {
   console.log('servidor iniciado')

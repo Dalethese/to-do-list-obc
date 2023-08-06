@@ -22,7 +22,19 @@ const tasksController = {
       res.redirect(`/checklists/${req.params.id}`)
     } catch (error) {
       let errors = error.errors
-      res.status(422).render('tasks/new', { task: {...task, error}, checklistId: req.params.id } )
+      res.status(422).render('tasks/new', { task: {...task, errors}, checklistId: req.params.id } )
+    }
+  },
+  delete: async (req, res) => {
+    try {
+      let task = await TaskModel.findByIdAndDelete(req.params.id)
+      let checklists = await Checklist.findById(task.checklist)
+      let taskToRemove = checklists.tasks.indexOf(task._id)
+      checklists.tasks.splice(taskToRemove, 1)
+      checklists.save()
+      res.redirect(`/checklists/${checklists._id}`)
+    } catch (error) {
+      res.status(422).render('/pages/error', { error: 'Erro ao deletar uma tarefa.' })
     }
   }
 }

@@ -1,5 +1,6 @@
 const express = require('express')
 const checklistsDependentRoute = express.Router()
+const simpleRouter = express.Router()
 
 const Checklist = require('../models/checklist')
 const Task = require('../models/task')
@@ -9,6 +10,9 @@ checklistsDependentRoute.get('/:id/tasks/new', async (req, res) => tasksControll
 // checklistsDependentRoute.get()
 checklistsDependentRoute.post('/:id/tasks', async (req, res) => tasksController.post(req, res))
 // checklistsDependentRoute.put()
-// checklistsDependentRoute.delete()
+simpleRouter.delete('/:id', async (req, res) => tasksController.delete(req, res))
 
-module.exports = { checklistDependent: checklistsDependentRoute }
+module.exports = { 
+  checklistDependent: checklistsDependentRoute,
+  simpleRouter
+}
