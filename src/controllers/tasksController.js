@@ -36,6 +36,16 @@ const tasksController = {
     } catch (error) {
       res.status(422).render('/pages/error', { error: 'Erro ao deletar uma tarefa.' })
     }
+  },
+  put: async (req, res) => {
+    let task = await TaskModel.findById(req.params.id)
+    try {
+      task.set(req.body.task)
+      await task.save()
+      res.status(200).json({ task })
+    } catch (error) {
+      res.status(422).json({ task: {...error.errors}})
+    }
   }
 }
 
